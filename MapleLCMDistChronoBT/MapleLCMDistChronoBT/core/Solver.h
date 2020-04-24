@@ -92,6 +92,7 @@ public:
     virtual ~Solver();
 
     bool usePADC; // enable/disable PADC
+    bool usePSIDS; // enable/disable PSIDS
     uint64_t nbReduceBeforeClearingDB,nbReduceDB;
     int incNbReduceBeforeClearingDB;
     uint64_t nbDBClearing;
@@ -175,6 +176,7 @@ public:
 
     // Extra results: (read-only member variable)
     //
+    vec<double> polarity_activity;
     vec<lbool> model;             // If problem is satisfiable, this vector contains the model (if any).
     vec<Lit>   conflict;          // If problem is unsatisfiable (possibly under assumptions),
     // this vector represent the final conflict clause expressed in the assumptions.
@@ -188,6 +190,7 @@ public:
     double    min_step_size;
     int       timer;
     double    var_decay;
+    double    pol_decay;
     double    clause_decay;
     double    random_var_freq;
     double    random_seed;
@@ -269,6 +272,7 @@ protected:
     vec<double>         activity_CHB,     // A heuristic measurement of the activity of a variable.
     activity_VSIDS,activity_distance;
     double              var_inc;          // Amount to bump next variable with.
+    double              pol_inc;
     OccLists<Lit, vec<Watcher>, WatcherDeleted>
     watches_bin,      // Watches for binary clauses only.
     watches;          // 'watches[lit]' is a list of constraints watching 'lit' (will go there if literal becomes true).
@@ -350,6 +354,9 @@ protected:
     void     claDecayActivity ();                      // Decay all clauses with the specified factor. Implemented by increasing the 'bump' value instead.
     void     claBumpActivity  (Clause& c);             // Increase a clause with the current 'bump' value.
 
+    void     polDecayActivity ();                      // Decay all polarities with the specified factor. Implemented by increasing the 'bump' value instead.
+    void     polBumpActivity  (Lit v);    // Increase a polarity activity with the current 'bump' value.
+    
     // Operations on clauses:
     //
     void     attachClause     (CRef cr);               // Attach a clause to watcher lists.
@@ -505,6 +512,19 @@ inline void Solver::varBumpActivity(Var v, double mult) {
 
     // Update order_heap with respect to new activity:
     if (order_heap_VSIDS.inHeap(v)) order_heap_VSIDS.decrease(v); }
+
+inline void Solver::polDecayActivity() {
+    pol_inc *= (1 / pol_decay); }
+inline void Solver::polBumpActivity(Lit lit) {
+    if ( (polarity_activity[toInt(lit)] += pol_inc) > 1e100 ) {
+        // Rescale:
+        for (int i = 0; i < nVars(); i++){
+            Lit p=mkLit(i);
+            polarity_activity[toInt(p)] *= 1e-100;
+            polarity_activity[toInt(~p)] *= 1e-100;
+        }
+        pol_inc *= 1e-100; }
+ }
 
 inline void Solver::claDecayActivity() { cla_inc *= (1 / clause_decay); }
 inline void Solver::claBumpActivity (Clause& c) {

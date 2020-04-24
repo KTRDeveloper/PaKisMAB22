@@ -53,6 +53,10 @@ static IntOption     opt_incNbReduceBeforeClearingDB     (_cat, "nbIncRedDB",   
 static IntOption     clearType     (_cat, "clearType",      "0=clear local only, 1=clear local & tier_2, 2=clear local & tier_2 & core", 0, IntRange(0, 2));
 static BoolOption    opt_use_padc      (_cat, "use-padc",    "enable/disable the use of PADC strategy", false);
 
+static DoubleOption  opt_pol_decay         (_cat, "pol-decay",   "The polarity activity decay factor",            0.80,     DoubleRange(0, false, 1, false));
+static BoolOption    lessActivePol      (_cat, "lessActivePol",    "Use less active polarity", false);
+static BoolOption    opt_use_psids      (_cat, "use-psids",    "enable/disable the use of PSIDS heuristic", false);
+
 static DoubleOption  opt_step_size         (_cat, "step-size",   "Initial step size",                             0.40,     DoubleRange(0, false, 1, false));
 static DoubleOption  opt_step_size_dec     (_cat, "step-size-dec","Step size decrement",                          0.000001, DoubleRange(0, false, 1, false));
 static DoubleOption  opt_min_step_size     (_cat, "min-step-size","Minimal step size",                            0.06,     DoubleRange(0, false, 1, false));
@@ -79,6 +83,7 @@ Solver::Solver() :
     // Parameters (user settable):
     //
     usePADC(opt_use_padc),
+    usePSIDS(opt_use_psids),
     nbReduceBeforeClearingDB(10),
     nbReduceDB(0),
     incNbReduceBeforeClearingDB(opt_incNbReduceBeforeClearingDB),
@@ -90,6 +95,7 @@ Solver::Solver() :
   , min_step_size    (opt_min_step_size)
   , timer            (5000)
   , var_decay        (opt_var_decay)
+  , pol_decay        (opt_pol_decay)
   , clause_decay     (opt_clause_decay)
   , random_var_freq  (opt_random_var_freq)
   , random_seed      (opt_random_seed)
@@ -120,6 +126,7 @@ Solver::Solver() :
   , ok                 (true)
   , cla_inc            (1)
   , var_inc            (1)
+  , pol_inc            (1)
   , watches_bin        (WatcherDeleted(ca))
   , watches            (WatcherDeleted(ca))
   , qhead              (0)
@@ -160,7 +167,11 @@ Solver::Solver() :
   , var_iLevel_inc     (1)
   , order_heap_distance(VarOrderLt(activity_distance))
 
-{printf("c usePADC = %s, nbIncRedDB = %i, -clearType=%i\n",usePADC ? "true" : "false",incNbReduceBeforeClearingDB,(int)clearType);}
+{
+    printf("c usePADC = %s, usePSIDS = %s\n",usePADC ? "true" : "false", usePSIDS ? "true" : "false");
+    if (usePADC) printf("c nbIncRedDB = %i, -clearType=%i\n",incNbReduceBeforeClearingDB,(int)clearType);
+    if (usePSIDS) printf("c lessActivePol: %s\n",lessActivePol?"true":"false");
+}
 
 
 Solver::~Solver()
@@ -882,6 +893,9 @@ Var Solver::newVar(bool sign, bool dvar)
     trail    .capacity(v+1);
     setDecisionVar(v, dvar);
 
+    polarity_activity.push(0);
+    polarity_activity.push(0);
+    
     activity_distance.push(0);
     var_iLevel.push(0);
     var_iLevel_tmp.push(0);
@@ -1162,7 +1176,30 @@ Lit Solver::pickBranchLit()
             next = order_heap.removeMin();
         }
 
-    return mkLit(next, polarity[next]);
+    if (usePSIDS) {
+        if (lessActivePol) {
+            Lit next_lit = mkLit(next);
+            if (polarity_activity[toInt(next_lit)] == polarity_activity[toInt(~next_lit)]) {
+                return mkLit(next, polarity[next]);
+            } else if (polarity_activity[toInt(next_lit)] < polarity_activity[toInt(~next_lit)]) {
+                return next_lit;
+            } else {
+                return ~next_lit;
+            }
+        }
+
+
+        Lit next_lit = mkLit(next);
+        if (polarity_activity[toInt(next_lit)] == polarity_activity[toInt(~next_lit)]) {
+            return mkLit(next, polarity[next]);
+        } else if (polarity_activity[toInt(next_lit)] < polarity_activity[toInt(~next_lit)]) {
+            return ~next_lit;
+        } else {
+            return next_lit;
+        }
+    } else {
+        return mkLit(next, polarity[next]);
+    }
 }
 
 inline Solver::ConflictData Solver::FindConflictLevel(CRef cind)
@@ -1509,6 +1546,7 @@ void Solver::uncheckedEnqueue(Lit p, int level, CRef from)
 #endif
     }
 
+    if(usePSIDS) polBumpActivity(p);
     assigns[x] = lbool(!sign(p));
     vardata[x] = mkVarData(from, level);
     trail.push_(p);
@@ -2044,6 +2082,7 @@ lbool Solver::search(int& nof_conflicts)
             }
 
             if (VSIDS) varDecayActivity();
+            if (usePSIDS) polDecayActivity();
             claDecayActivity();
 
             /*if (--learntsize_adjust_cnt == 0){
