@@ -91,6 +91,10 @@ public:
     Solver();
     virtual ~Solver();
 
+    bool usePADC; // enable/disable PADC
+    uint64_t nbReduceBeforeClearingDB,nbReduceDB;
+    int incNbReduceBeforeClearingDB;
+    uint64_t nbDBClearing;
     // Problem specification:
     //
     Var     newVar    (bool polarity = true, bool dvar = true); // Add a new variable with parameters specifying variable mode.
@@ -331,6 +335,7 @@ protected:
     bool     litRedundant     (Lit p, uint32_t abstract_levels);                       // (helper method for 'analyze()')
     lbool    search           (int& nof_conflicts);                                    // Search for a given number of conflicts.
     lbool    solve_           ();                                                      // Main solve method (assumptions given in 'assumptions').
+    void     removeAll(vec<CRef>& cs, uint32_t type);
     void     reduceDB         ();                                                      // Reduce the set of learnt clauses.
     void     reduceDB_Tier2   ();
     void     removeSatisfied  (vec<CRef>& cs);                                         // Shrink 'cs' to contain only non-satisfied clauses.

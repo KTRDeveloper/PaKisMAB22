@@ -4,8 +4,6 @@
     <df root="." name="0">
       <df name="bin">
       </df>
-      <df name="checksat_0">
-      </df>
       <df name="MapleLCMDistChronoBT">
         <df name="MapleLCMDistChronoBT">
           <df name="core">

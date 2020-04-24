@@ -49,6 +49,9 @@ unsigned char* Solver::buf_ptr = drup_buf;
 
 
 static const char* _cat = "CORE";
+static IntOption     opt_incNbReduceBeforeClearingDB     (_cat, "nbIncRedDB",      "Inc of Nb Reduce Before Clearing DB", 10, IntRange(1, INT32_MAX));
+static IntOption     clearType     (_cat, "clearType",      "0=clear local only, 1=clear local & tier_2, 2=clear local & tier_2 & core", 0, IntRange(0, 2));
+static BoolOption    opt_use_padc      (_cat, "use-padc",    "enable/disable the use of PADC strategy", false);
 
 static DoubleOption  opt_step_size         (_cat, "step-size",   "Initial step size",                             0.40,     DoubleRange(0, false, 1, false));
 static DoubleOption  opt_step_size_dec     (_cat, "step-size-dec","Step size decrement",                          0.000001, DoubleRange(0, false, 1, false));
@@ -75,6 +78,11 @@ Solver::Solver() :
 
     // Parameters (user settable):
     //
+    usePADC(opt_use_padc),
+    nbReduceBeforeClearingDB(10),
+    nbReduceDB(0),
+    incNbReduceBeforeClearingDB(opt_incNbReduceBeforeClearingDB),
+    nbDBClearing(0),
     drup_file        (NULL)
   , verbosity        (0)
   , step_size        (opt_step_size)
@@ -152,7 +160,7 @@ Solver::Solver() :
   , var_iLevel_inc     (1)
   , order_heap_distance(VarOrderLt(activity_distance))
 
-{}
+{printf("c usePADC = %s, nbIncRedDB = %i, -clearType=%i\n",usePADC ? "true" : "false",incNbReduceBeforeClearingDB,(int)clearType);}
 
 
 Solver::~Solver()
@@ -1638,6 +1646,23 @@ ExitProp:;
 }
 
 
+void Solver::removeAll(vec<CRef>& learnts, uint32_t type){
+   
+  int     i, j;  
+  
+  for (i = j = 0; i < learnts.size(); i++){
+    Clause& c = ca[learnts[i]];
+    if (c.mark() <= type && c.lbd()>2 && c.size() > 2 &&  !locked(c)) {
+      removeClause(learnts[i]);
+    }
+    else {
+      learnts[j++] = learnts[i];
+    }
+  }
+  learnts.shrink(i - j);
+}
+
+
 /*_________________________________________________________________________________________________
 |
 |  reduceDB : ()  ->  [void]
@@ -1656,7 +1681,21 @@ void Solver::reduceDB()
     int     i, j;
     //if (local_learnts_dirty) cleanLearnts(learnts_local, LOCAL);
     //local_learnts_dirty = false;
+    
+    nbReduceDB++;
+    if(usePADC) {
+        if(nbReduceDB == nbReduceBeforeClearingDB){
+          nbDBClearing++;
+          nbReduceBeforeClearingDB += incNbReduceBeforeClearingDB;
 
+          if(clearType >=0)removeAll(learnts_local,LOCAL);
+          if(clearType >=1)removeAll(learnts_tier2,TIER2);
+          if(clearType >=2) removeAll(learnts_core,CORE);
+
+          checkGarbage();
+          return;
+        }
+    }
     sort(learnts_local, reduceDB_lt(ca));
 
     int limit = learnts_local.size() / 2;
