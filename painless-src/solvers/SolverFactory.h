@@ -32,10 +32,10 @@ class SolverFactory
 {
 public:
    /// Instantiate and return a MapleCOMSPS solver.
-   static SolverInterface * createMapleCOMSPSSolver();
+   static SolverInterface * createMapleLCMDistChronoBTSolver();
 
    /// Instantiate and return a group of MapleCOMSPS solvers.
-   static void createMapleCOMSPSSolvers(int groupSize,
+   static void createMapleLCMDistChronoBTSolvers(int groupSize,
                                         vector<SolverInterface *> & solvers);
 
    /// Print stats of a groupe of solvers.

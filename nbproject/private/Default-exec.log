@@ -1,0 +1,24 @@
+called: g++
+	/home/ktr/Desktop/D/SC2020/Parallel/painless-MapleLCMDistChronoBT/MapleLCMDistChronoBT
+	g++
+	-I.
+	-Im4ri-20140914
+	-D
+	__STDC_LIMIT_MACROS
+	-D
+	__STDC_FORMAT_MACROS
+	-Wall
+	-Wno-parentheses
+	-Wextra
+	-O3
+	-D
+	NDEBUG
+	-g
+	-c
+	-o
+	build/release/MapleLCMDistChronoBT/simp/Main.o
+	MapleLCMDistChronoBT/simp/Main.cc
+	-MMD
+	-MF
+	build/release/MapleLCMDistChronoBT/simp/Main.d
+

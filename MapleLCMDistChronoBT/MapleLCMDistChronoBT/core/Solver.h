@@ -41,11 +41,11 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #define LOOSE_PROP_STAT
 #endif
 
-#include "mtl/Vec.h"
-#include "mtl/Heap.h"
-#include "mtl/Alg.h"
-#include "utils/Options.h"
-#include "core/SolverTypes.h"
+#include "../mtl/Vec.h"
+#include "../mtl/Heap.h"
+#include "../mtl/Alg.h"
+#include "../utils/Options.h"
+#include "../core/SolverTypes.h"
 
 
 // Don't change the actual numbers.
@@ -103,6 +103,20 @@ public:
     bool    addClause_(      vec<Lit>& ps);                     // Add a clause to the solver without making superflous internal copy. Will
     // change the passed vector 'ps'.
 
+    
+        // Parallel support
+    //
+    bool    importClauses();
+    void    importUnitClauses();
+
+    vec<Lit> importedClause;
+    void *   issuer;                                            // used as the callback parameter
+
+    Lit  (* cbkImportUnit)  (void *);
+    bool (* cbkImportClause)(void *, int *, vec<Lit> &);
+    void (* cbkExportClause)(void *, int, vec<Lit> &);	        // callback for clause learning
+
+    
     // Solving:
     //
     bool    simplify     ();                        // Removes already satisfied clauses.

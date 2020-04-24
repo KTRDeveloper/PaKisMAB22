@@ -58,14 +58,14 @@ HordeSatSharing::doSharing(int idSharer, const vector<SolverInterface *> & from,
 
       if (usedPercent < 80) {
          from[i]->increaseClauseProduction();
-         log(1, "Sharer %d production increase for solver %d.\n", idSharer,
-             from[i]->id);
+//         log(1, "Sharer %d production increase for solver %d.\n", idSharer,
+//             from[i]->id);
       }
 
-      if (selectCount > 0) {
-         log(1, "Sharer %d filled %d%% of its buffer %.2f\n", idSharer,
-             usedPercent, used/(float)selectCount);
-      }
+//      if (selectCount > 0) {
+//         log(1, "Sharer %d filled %d%% of its buffer %.2f\n", idSharer,
+//             usedPercent, used/(float)selectCount);
+//      }
 
 
       for (size_t j = 0; j < to.size(); j++) {

@@ -1,0 +1,23 @@
+##################################################
+###                  Cosy                      ###
+##################################################
+# + /usr/bin/make -C cosy third_party
+# + /usr/bin/make -C cosy
+##################################################
+###               MapleLCMDistChronoBT                  ###
+##################################################
+# cd mapleCOMSPS && tar zxvf m4ri-20140914.tar.gz
+# cd mapleCOMSPS/m4ri-20140914 && ./configure
+# + /usr/bin/make -C mapleCOMSPS/m4ri-20140914
+/usr/bin/make -C MapleLCMDistChronoBT
+make[1]: Entering directory '/home/ktr/Desktop/D/SC2020/Parallel/painless-MapleLCMDistChronoBT/MapleLCMDistChronoBT'
+Compiling: build/release/MapleLCMDistChronoBT/simp/Main.o
+MapleLCMDistChronoBT/simp/Main.cc:35:10: fatal error: utils/System.h: No such file or directory
+ #include "utils/System.h"
+          ^~~~~~~~~~~~~~~~
+compilation terminated.
+Makefile:127: recipe for target 'build/release/MapleLCMDistChronoBT/simp/Main.o' failed
+make[1]: *** [build/release/MapleLCMDistChronoBT/simp/Main.o] Error 1
+make[1]: Leaving directory '/home/ktr/Desktop/D/SC2020/Parallel/painless-MapleLCMDistChronoBT/MapleLCMDistChronoBT'
+Makefile:5: recipe for target 'all' failed
+make: *** [all] Error 2

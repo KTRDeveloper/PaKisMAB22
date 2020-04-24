@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="bin">
+      </df>
+      <df name="checksat_0">
+      </df>
+      <df name="MapleLCMDistChronoBT">
+        <df name="MapleLCMDistChronoBT">
+          <df name="core">
+            <in>Dimacs.h</in>
+            <in>Main.cc</in>
+            <in>Solver.cc</in>
+            <in>Solver.h</in>
+            <in>SolverTypes.h</in>
+          </df>
+          <df name="mtl">
+            <in>Alg.h</in>
+            <in>Alloc.h</in>
+            <in>Heap.h</in>
+            <in>IntTypes.h</in>
+            <in>Map.h</in>
+            <in>Queue.h</in>
+            <in>Sort.h</in>
+            <in>Vec.h</in>
+            <in>XAlloc.h</in>
+          </df>
+          <df name="simp">
+            <in>Main.cc</in>
+            <in>SimpSolver.cc</in>
+            <in>SimpSolver.h</in>
+          </df>
+          <df name="utils">
+            <in>Options.cc</in>
+            <in>Options.h</in>
+            <in>ParseUtils.h</in>
+            <in>System.cc</in>
+            <in>System.h</in>
+          </df>
+        </df>
+      </df>
+      <df name="painless-src">
+        <df name="clauses">
+          <in>ClauseBuffer.cpp</in>
+          <in>ClauseBuffer.h</in>
+          <in>ClauseDatabase.cpp</in>
+          <in>ClauseDatabase.h</in>
+          <in>ClauseExchange.h</in>
+          <in>ClauseManager.h</in>
+        </df>
+        <df name="sharing">
+          <in>HordeSatSharing.cpp</in>
+          <in>HordeSatSharing.h</in>
+          <in>Sharer.cpp</in>
+          <in>Sharer.h</in>
+          <in>SharingStrategy.h</in>
+          <in>SimpleSharing.cpp</in>
+          <in>SimpleSharing.h</in>
+        </df>
+        <df name="solvers">
+          <in>MapleLCMDistChronoBTSolver.cpp</in>
+          <in>MapleLCMDistChronoBTSolver.h</in>
+          <in>SolverFactory.cpp</in>
+          <in>SolverFactory.h</in>
+          <in>SolverInterface.h</in>
+        </df>
+        <df name="utils">
+          <in>Logger.cpp</in>
+          <in>Logger.h</in>
+          <in>Parameters.cpp</in>
+          <in>Parameters.h</in>
+          <in>SatUtils.cpp</in>
+          <in>SatUtils.h</in>
+          <in>System.cpp</in>
+          <in>System.h</in>
+          <in>Threading.h</in>
+        </df>
+        <df name="working">
+          <in>Portfolio.cpp</in>
+          <in>Portfolio.h</in>
+          <in>SequentialWorker.cpp</in>
+          <in>SequentialWorker.h</in>
+          <in>WorkingStrategy.h</in>
+        </df>
+        <in>painless.cpp</in>
+        <in>painless.h</in>
+      </df>
+    </df>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>2</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>.</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

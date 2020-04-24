@@ -4,11 +4,18 @@ OBJS = $(addsuffix .o, $(basename $(SRCS)))
 
 EXEC = painless
 
-LIBS = -lmapleCOMSPS -L../mapleCOMSPS/build/release/lib/ \
-       -lm4ri -L../mapleCOMSPS/m4ri-20140914/.libs \
-       -lpthread -lz -lm -static -lcosy -lbliss
+#LIBS = -lmapleCOMSPS -L../mapleCOMSPS/build/release/lib/ \
+#       -lm4ri -L../mapleCOMSPS/m4ri-20140914/.libs \
+#       -lpthread -lz -lm -static -lcosy -lbliss
+#
+#CXXFLAGS = -I../mapleCOMSPS -I../mapleCOMSPS/m4ri-20140914 \
+#           -D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS \
+#           -std=c++11 -O3 -D NDEBUG
 
-CXXFLAGS = -I../mapleCOMSPS -I../mapleCOMSPS/m4ri-20140914 \
+LIBS = -lMapleLCMDistChronoBT -L../MapleLCMDistChronoBT/build/release/lib/ \
+       -lpthread -lz -lm -static
+
+CXXFLAGS = -I../MapleLCMDistChronoBT \
            -D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS \
            -std=c++11 -O3 -D NDEBUG
 

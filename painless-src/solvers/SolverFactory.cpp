@@ -17,7 +17,7 @@
 // this program.  If not, see <http://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-#include "../solvers/MapleCOMSPSSolver.h"
+#include "../solvers/MapleLCMDistChronoBTSolver.h"
 #include "../solvers/SolverFactory.h"
 #include "../utils/Parameters.h"
 #include "../utils/System.h"
@@ -50,11 +50,11 @@ SolverFactory::nativeDiversification(const vector<SolverInterface *> & solvers)
 }
 
 SolverInterface *
-SolverFactory::createMapleCOMSPSSolver()
+SolverFactory::createMapleLCMDistChronoBTSolver()
 {
    int id = currentIdSolver.fetch_add(1);
 
-   SolverInterface * solver = new MapleCOMSPSSolver(id);
+   SolverInterface * solver = new MapleLCMDistChronoBTSolver(id);
 
    solver->loadFormula(Parameters::getFilename());
 
@@ -62,10 +62,10 @@ SolverFactory::createMapleCOMSPSSolver()
 }
 
 void
-SolverFactory::createMapleCOMSPSSolvers(int maxSolvers,
+SolverFactory::createMapleLCMDistChronoBTSolvers(int maxSolvers,
                                   vector<SolverInterface *> & solvers)
 {
-   solvers.push_back(createMapleCOMSPSSolver());
+   solvers.push_back(createMapleLCMDistChronoBTSolver());
 
    double memoryUsed    = getMemoryUsed();
    int maxMemorySolvers = Parameters::getIntParam("max-memory", 51) * 1024 *
@@ -76,7 +76,7 @@ SolverFactory::createMapleCOMSPSSolvers(int maxSolvers,
    }
 
    for (int i = 1; i < maxSolvers; i++) {
-      solvers.push_back(createMapleCOMSPSSolver());
+      solvers.push_back(createMapleLCMDistChronoBTSolver());
    }
 }
 

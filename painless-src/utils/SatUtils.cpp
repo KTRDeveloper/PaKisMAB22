@@ -55,6 +55,21 @@ void printModel(vector<int> & model)
   printf("\n");
 }
 
+void printModel2(vector<int> & model)
+{
+  model.push_back(0);
+    
+  for (unsigned i = 0; i < model.size(); i++) {
+    
+     if (i == 0) {
+        printf("v");
+     }
+  
+     printf(" %d", model[i]);
+  }
+
+  printf("\n");
+}
 
 bool loadFormulaToSolvers(vector<SolverInterface*> solvers,
                           const char* filename)

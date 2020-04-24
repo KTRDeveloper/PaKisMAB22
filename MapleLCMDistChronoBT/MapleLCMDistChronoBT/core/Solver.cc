@@ -30,8 +30,8 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include <signal.h>
 #include <unistd.h>
 
-#include "mtl/Sort.h"
-#include "core/Solver.h"
+#include "../mtl/Sort.h"
+#include "../core/Solver.h"
 
 using namespace Minisat;
 
@@ -879,6 +879,68 @@ Var Solver::newVar(bool sign, bool dvar)
     var_iLevel_tmp.push(0);
     pathCs.push(0);
     return v;
+}
+
+void Solver::importUnitClauses() {
+    assert(decisionLevel() == 0);
+
+    Lit l;
+    while ((l = cbkImportUnit(issuer)) != lit_Undef) {
+        if (value(var(l)) == l_Undef) {
+            uncheckedEnqueue(l);
+        }
+    }
+}
+
+bool Solver::importClauses() {
+    assert(decisionLevel() == 0);
+
+    int lbd, k, l;
+    bool alreadySat;
+    while (cbkImportClause(issuer, &lbd, importedClause)) {
+        alreadySat = false;
+        // Simplify clause before add
+        for (k = l = 0; k < importedClause.size(); k++) {
+            if (value(importedClause[k]) == l_True) {
+                alreadySat = true;
+                break;
+            } else if (value(importedClause[k]) == l_Undef) {
+                importedClause[l++] = importedClause[k];
+            }
+        }
+        importedClause.shrink(k - l);
+
+        if (alreadySat) {
+            importedClause.clear();
+            continue;
+        }
+
+        if (importedClause.size() == 0) {
+           return false;
+        } else if (importedClause.size() == 1) {
+            uncheckedEnqueue(importedClause[0]);
+        } else {
+            CRef cr = ca.alloc(importedClause, true);
+            if (importedClause.size() == 2)
+                lbd = lbd > 2 ? 2 : lbd;
+            ca[cr].set_lbd(lbd);
+            if (lbd <= core_lbd_cut) {
+                learnts_core.push(cr);
+                ca[cr].mark(CORE);
+            } else if (lbd <= 6) {
+                learnts_tier2.push(cr);
+                ca[cr].mark(TIER2);
+                ca[cr].touched() = conflicts;
+            } else {
+                learnts_local.push(cr);
+                claBumpActivity(ca[cr]);
+            }
+            attachClause(cr);
+        }
+        importedClause.clear();
+    }
+
+    return true;
 }
 
 
@@ -1859,6 +1921,10 @@ lbool Solver::search(int& nof_conflicts)
     }
 
     for (;;){
+        if (decisionLevel() == 0) { // We import clauses
+            importUnitClauses();
+            if (!importClauses()) return l_False;
+        }
         CRef confl = propagate();
 
         if (confl != CRef_Undef){
@@ -1885,6 +1951,7 @@ lbool Solver::search(int& nof_conflicts)
                 collectFirstUIP(confl);
 
             analyze(confl, learnt_clause, backtrack_level, lbd);
+            cbkExportClause(issuer, lbd, learnt_clause);
             // check chrono backtrack condition
             if ((confl_to_chrono < 0 || confl_to_chrono <= conflicts) && chrono > -1 && (decisionLevel() - backtrack_level) >= chrono)
             {
