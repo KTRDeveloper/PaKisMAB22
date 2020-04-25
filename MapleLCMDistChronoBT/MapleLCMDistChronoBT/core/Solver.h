@@ -96,10 +96,16 @@ public:
     uint64_t nbReduceBeforeClearingDB,nbReduceDB;
     int incNbReduceBeforeClearingDB;
     uint64_t nbDBClearing;
+    
+    bool enableUpdateVarsActivities;
+    bool exponent, cubic, square, linear;
+    bool update_chb, update_vsids, update_distance;
+    
     // Problem specification:
     //
     Var     newVar    (bool polarity = true, bool dvar = true); // Add a new variable with parameters specifying variable mode.
-
+    void    updateVarsActivities(bool updatePolarities);
+    
     bool    addClause (const vec<Lit>& ps);                     // Add a clause to the solver.
     bool    addEmptyClause();                                   // Add the empty clause, making the solver contradictory.
     bool    addClause (Lit p);                                  // Add a unit clause to the solver.

@@ -57,6 +57,16 @@ static DoubleOption  opt_pol_decay         (_cat, "pol-decay",   "The polarity a
 static BoolOption    lessActivePol      (_cat, "lessActivePol",    "Use less active polarity", false);
 static BoolOption    opt_use_psids      (_cat, "use-psids",    "enable/disable the use of PSIDS heuristic", false);
 
+static BoolOption    opt_use_up_act      (_cat, "use-up-act",    "enable/disable Initialization of variables activities bases on occurence", false);
+static BoolOption    opt_exponent      (_cat, "exponent",    "Use exponent for initial activity", false);
+static BoolOption    opt_cubic      (_cat, "cubic",    "Use cubic for initial activity", false);
+static BoolOption    opt_square      (_cat, "square",    "Use square for initial activity", false);
+static BoolOption    opt_linear      (_cat, "linear",    "Use linear for initial activity", false);
+
+static BoolOption    opt_update_chb      (_cat, "update-chb",    "initialize chb activity", false);
+static BoolOption    opt_update_vsids      (_cat, "update-vsids",    "initialize vsids activity", false);
+static BoolOption    opt_update_distance      (_cat, "update-distance",    "initialize distance activity", false);
+
 static DoubleOption  opt_step_size         (_cat, "step-size",   "Initial step size",                             0.40,     DoubleRange(0, false, 1, false));
 static DoubleOption  opt_step_size_dec     (_cat, "step-size-dec","Step size decrement",                          0.000001, DoubleRange(0, false, 1, false));
 static DoubleOption  opt_min_step_size     (_cat, "min-step-size","Minimal step size",                            0.06,     DoubleRange(0, false, 1, false));
@@ -88,6 +98,9 @@ Solver::Solver() :
     nbReduceDB(0),
     incNbReduceBeforeClearingDB(opt_incNbReduceBeforeClearingDB),
     nbDBClearing(0),
+    enableUpdateVarsActivities(opt_use_up_act),
+    exponent (opt_exponent), cubic (opt_cubic), square(opt_square), linear (opt_linear),
+    update_chb (opt_update_chb), update_vsids (opt_update_vsids), update_distance (opt_update_distance),
     drup_file        (NULL)
   , verbosity        (0)
   , step_size        (opt_step_size)
@@ -168,9 +181,14 @@ Solver::Solver() :
   , order_heap_distance(VarOrderLt(activity_distance))
 
 {
-    printf("c usePADC = %s, usePSIDS = %s\n",usePADC ? "true" : "false", usePSIDS ? "true" : "false");
+    printf("c usePADC = %s, usePSIDS = %s, enableUpdateVarsActivities = %s\n",usePADC ? "true" : "false", usePSIDS ? "true" : "false", enableUpdateVarsActivities? "true" : "false");
     if (usePADC) printf("c nbIncRedDB = %i, -clearType=%i\n",incNbReduceBeforeClearingDB,(int)clearType);
     if (usePSIDS) printf("c lessActivePol: %s\n",lessActivePol?"true":"false");
+    
+    if(enableUpdateVarsActivities) {
+        printf("c exponent: %s, cubic: %s, square: %s, linear: %s\n",exponent?"true":"false",cubic?"true":"false", square?"true":"false", linear?"true":"false");
+        printf("c update_chb: %s, update_vsids: %s, update_distance: %s\n",update_chb?"true":"false", update_vsids?"true":"false", update_distance?"true":"false");
+    }
 }
 
 
@@ -965,6 +983,53 @@ bool Solver::importClauses() {
     return true;
 }
 
+void Solver::updateVarsActivities(bool updatePolarities) {
+    assert(enableUpdateVarsActivities);
+    vec<double> scores;
+        scores.growTo(2*nVars(),0.0);
+        for(int i=0; i<nClauses(); ++i){
+            const Clause &c = ca[clauses[i]];
+            double increment = 0;
+            if(exponent){
+                assert(!cubic && !square && !linear);
+                increment = 1/(double)(1 << c.size()) ;
+            } else if(cubic){
+                assert(!exponent && !square && !linear);
+                increment = 1/(double)(c.size() * c.size()* c.size()) ;
+            } else if(square){
+                assert(!cubic && !exponent && !linear);
+                increment = 1/(double)(c.size() * c.size()) ;
+            } else if(linear){
+                assert(!cubic && !square && !exponent);
+                increment = 1/(double)(c.size()) ;
+            }
+            
+            assert(cubic || square || linear || exponent);
+            
+            for(int j=0; j<c.size(); ++j){
+                scores[toInt(c[j])] += increment;
+            }
+            
+        }
+        
+        for(int i=0; i<nVars(); ++i){
+               if(updatePolarities) { polarity[i]=scores[2*i]<=scores[2*i+1];}
+               
+               if(update_chb){
+                   activity_CHB[i] += scores[2*i]*scores[2*i+1];
+               }
+               
+               if(update_vsids){
+                   activity_VSIDS[i] += scores[2*i]*scores[2*i+1];
+               }
+               
+               if(update_distance){
+                   activity_distance[i] += scores[2*i]*scores[2*i+1];
+               }
+               
+        }
+        rebuildOrderHeap();
+}
 
 bool Solver::addClause_(vec<Lit>& ps)
 {
@@ -2217,6 +2282,8 @@ lbool Solver::solve_()
     conflict.clear();
     if (!ok) return l_False;
 
+    if (enableUpdateVarsActivities) updateVarsActivities(true);
+    
     solves++;
 
     max_learnts               = nClauses() * learntsize_factor;
