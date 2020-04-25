@@ -5,6 +5,34 @@
       <df name="bin">
       </df>
       <df name="MapleLCMDistChronoBT">
+        <df name="build">
+          <df name="dynamic">
+            <df name="lib">
+            </df>
+            <df name="MapleLCMDistChronoBT">
+              <df name="core">
+              </df>
+              <df name="simp">
+              </df>
+              <df name="utils">
+              </df>
+            </df>
+          </df>
+          <df name="release">
+            <df name="bin">
+            </df>
+            <df name="lib">
+            </df>
+            <df name="MapleLCMDistChronoBT">
+              <df name="core">
+              </df>
+              <df name="simp">
+              </df>
+              <df name="utils">
+              </df>
+            </df>
+          </df>
+        </df>
         <df name="MapleLCMDistChronoBT">
           <df name="core">
             <in>Dimacs.h</in>

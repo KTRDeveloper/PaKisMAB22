@@ -47,6 +47,15 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 #include "../utils/Options.h"
 #include "../core/SolverTypes.h"
 
+// duplicate learnts version
+#include <chrono>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
+#include <map>
+#include <algorithm>
+// duplicate learnts version
 
 // Don't change the actual numbers.
 #define LOCAL 0
@@ -93,14 +102,18 @@ public:
 
     bool usePADC; // enable/disable PADC
     bool usePSIDS; // enable/disable PSIDS
+    bool useDL; //enable/disable DL see MapleLCMDistChronoBT-DL-v3
     uint64_t nbReduceBeforeClearingDB,nbReduceDB;
     int incNbReduceBeforeClearingDB;
+    int clearType;
     uint64_t nbDBClearing;
     
     bool enableUpdateVarsActivities;
     bool exponent, cubic, square, linear;
     bool update_chb, update_vsids, update_distance;
     
+    inline void enableDL(){ useDL = true; core_lbd_cut = 2; }
+    inline void disableDL(){ useDL = false; core_lbd_cut = 3; }
     // Problem specification:
     //
     Var     newVar    (bool polarity = true, bool dvar = true); // Add a new variable with parameters specifying variable mode.
@@ -215,12 +228,32 @@ public:
     int       learntsize_adjust_start_confl;
     double    learntsize_adjust_inc;
 
+    
+    
+    // duplicate learnts version
+    uint64_t       VSIDS_props_limit;
+    uint32_t       min_number_of_learnts_copies;    
+    uint32_t       dupl_db_init_size;
+    uint32_t       max_lbd_dup;
+    std::chrono::microseconds duptime;
+    // duplicate learnts version
+
     // Statistics: (read-only member variable)
     //
     uint64_t solves, starts, decisions, rnd_decisions, propagations, conflicts, conflicts_VSIDS;
     uint64_t dec_vars, clauses_literals, learnts_literals, max_literals, tot_literals;
     uint64_t chrono_backtrack, non_chrono_backtrack;
 
+    
+    // duplicate learnts version
+    uint64_t duplicates_added_conflicts;
+    uint64_t duplicates_added_tier2;
+    uint64_t duplicates_added_minimization;    
+    uint64_t dupl_db_size;
+    
+    // duplicate learnts version
+
+    
     vec<uint32_t> picked;
     vec<uint32_t> conflicted;
     vec<uint32_t> almost_conflicted;
@@ -306,6 +339,11 @@ protected:
 
     ClauseAllocator     ca;
     
+    // duplicate learnts version    
+    std::map<int32_t,std::map<uint32_t,std::unordered_map<uint64_t,uint32_t>>>  ht;
+    uint32_t     reduceduplicates         ();         // Reduce the duplicates DB
+    // duplicate learnts version
+
     int 				confl_to_chrono;
     int 				chrono;
 
@@ -372,6 +410,10 @@ protected:
     bool     satisfied        (const Clause& c) const; // Returns TRUE if a clause is satisfied in the current state.
 
     void     relocAll         (ClauseAllocator& to);
+
+    // duplicate learnts version
+    int     is_duplicate     (std::vector<uint32_t>&c); //returns TRUE if a clause is duplicate
+    // duplicate learnts version
 
     // Misc:
     //
