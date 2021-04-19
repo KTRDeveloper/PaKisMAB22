@@ -23,6 +23,8 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
+#include <omp.h>
 
 static unsigned intWidth(int i)
 {
@@ -75,7 +77,7 @@ bool loadFormulaToSolvers(vector<SolverInterface*> solvers,
                           const char* filename)
 {
 	FILE* f = fopen(filename, "r");
-
+        int max_var = 0;
 	if (f == NULL)
 		return false;
 	
@@ -132,6 +134,7 @@ bool loadFormulaToSolvers(vector<SolverInterface*> solvers,
 
 				for (size_t i=0; i<cls.size(); i++) {
 				   ncls->lits[i] = cls[i];
+                                   if(max_var < abs(cls[i])) max_var = abs(cls[i]);
 				}
 
 				ClauseManager::increaseClause(ncls, solvers.size());
@@ -145,8 +148,10 @@ bool loadFormulaToSolvers(vector<SolverInterface*> solvers,
 
 	fclose(f);
 
+        #pragma omp parallel for num_threads(solvers.size())
 	for (size_t i = 0; i < solvers.size(); i++) {
 		solvers[i]->addInitialClauses(clauses);
+		solvers[i]->setVariablesCount(max_var);
 	}
 
 	return true;

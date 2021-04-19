@@ -1,116 +1,328 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="100">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
-    <df root="." name="0">
+    <df root="kissat" name="0">
+      <df name="build">
+        <in>build.h</in>
+      </df>
+      <df name="scripts">
+      </df>
+      <df name="src">
+        <in>allocate.c</in>
+        <in>allocate.h</in>
+        <in>analyze.c</in>
+        <in>analyze.h</in>
+        <in>ands.c</in>
+        <in>ands.h</in>
+        <in>application.c</in>
+        <in>application.h</in>
+        <in>arena.c</in>
+        <in>arena.h</in>
+        <in>assign.c</in>
+        <in>assign.h</in>
+        <in>autarky.c</in>
+        <in>autarky.h</in>
+        <in>averages.c</in>
+        <in>averages.h</in>
+        <in>backtrack.c</in>
+        <in>backtrack.h</in>
+        <in>backward.c</in>
+        <in>backward.h</in>
+        <in>build.c</in>
+        <in>bump.c</in>
+        <in>bump.h</in>
+        <in>check.c</in>
+        <in>check.h</in>
+        <in>clause.c</in>
+        <in>clause.h</in>
+        <in>clueue.c</in>
+        <in>clueue.h</in>
+        <in>collect.c</in>
+        <in>collect.h</in>
+        <in>colors.c</in>
+        <in>colors.h</in>
+        <in>compact.c</in>
+        <in>compact.h</in>
+        <in>config.c</in>
+        <in>config.h</in>
+        <in>cover.h</in>
+        <in>decide.c</in>
+        <in>decide.h</in>
+        <in>deduce.c</in>
+        <in>deduce.h</in>
+        <in>dense.c</in>
+        <in>dense.h</in>
+        <in>dominate.c</in>
+        <in>dominate.h</in>
+        <in>dump.c</in>
+        <in>eliminate.c</in>
+        <in>eliminate.h</in>
+        <in>endianess.h</in>
+        <in>equivalences.c</in>
+        <in>equivalences.h</in>
+        <in>error.c</in>
+        <in>error.h</in>
+        <in>extend.c</in>
+        <in>extend.h</in>
+        <in>failed.c</in>
+        <in>failed.h</in>
+        <in>file.c</in>
+        <in>file.h</in>
+        <in>flags.c</in>
+        <in>flags.h</in>
+        <in>format.c</in>
+        <in>format.h</in>
+        <in>forward.c</in>
+        <in>forward.h</in>
+        <in>frames.c</in>
+        <in>frames.h</in>
+        <in>gates.c</in>
+        <in>gates.h</in>
+        <in>handle.c</in>
+        <in>handle.h</in>
+        <in>heap.c</in>
+        <in>heap.h</in>
+        <in>ifthenelse.c</in>
+        <in>ifthenelse.h</in>
+        <in>import.c</in>
+        <in>import.h</in>
+        <in>inline.h</in>
+        <in>internal.c</in>
+        <in>internal.h</in>
+        <in>kissat.h</in>
+        <in>learn.c</in>
+        <in>learn.h</in>
+        <in>limits.c</in>
+        <in>limits.h</in>
+        <in>literal.h</in>
+        <in>logging.c</in>
+        <in>logging.h</in>
+        <in>main.c</in>
+        <in>minimize.c</in>
+        <in>minimize.h</in>
+        <in>mode.c</in>
+        <in>mode.h</in>
+        <in>options.c</in>
+        <in>options.h</in>
+        <in>parse.c</in>
+        <in>parse.h</in>
+        <in>phases.c</in>
+        <in>phases.h</in>
+        <in>print.c</in>
+        <in>print.h</in>
+        <in>probe.c</in>
+        <in>probe.h</in>
+        <in>profile.c</in>
+        <in>profile.h</in>
+        <in>promote.c</in>
+        <in>promote.h</in>
+        <in>proof.c</in>
+        <in>proof.h</in>
+        <in>propdense.c</in>
+        <in>propdense.h</in>
+        <in>prophyper.c</in>
+        <in>prophyper.h</in>
+        <in>proplit.h</in>
+        <in>proprobe.c</in>
+        <in>proprobe.h</in>
+        <in>propsearch.c</in>
+        <in>propsearch.h</in>
+        <in>queue.c</in>
+        <in>queue.h</in>
+        <in>random.h</in>
+        <in>rank.h</in>
+        <in>reduce.c</in>
+        <in>reduce.h</in>
+        <in>reference.h</in>
+        <in>reluctant.c</in>
+        <in>reluctant.h</in>
+        <in>rephase.c</in>
+        <in>rephase.h</in>
+        <in>report.c</in>
+        <in>report.h</in>
+        <in>require.h</in>
+        <in>resize.c</in>
+        <in>resize.h</in>
+        <in>resolve.c</in>
+        <in>resolve.h</in>
+        <in>resources.c</in>
+        <in>resources.h</in>
+        <in>restart.c</in>
+        <in>restart.h</in>
+        <in>search.c</in>
+        <in>search.h</in>
+        <in>smooth.c</in>
+        <in>smooth.h</in>
+        <in>sort.c</in>
+        <in>sort.h</in>
+        <in>stack.c</in>
+        <in>stack.h</in>
+        <in>statistics.c</in>
+        <in>statistics.h</in>
+        <in>strengthen.c</in>
+        <in>strengthen.h</in>
+        <in>substitute.c</in>
+        <in>substitute.h</in>
+        <in>terminate.c</in>
+        <in>terminate.h</in>
+        <in>ternary.c</in>
+        <in>ternary.h</in>
+        <in>trail.c</in>
+        <in>trail.h</in>
+        <in>transitive.c</in>
+        <in>transitive.h</in>
+        <in>utilities.c</in>
+        <in>utilities.h</in>
+        <in>value.h</in>
+        <in>vector.c</in>
+        <in>vector.h</in>
+        <in>vivify.c</in>
+        <in>vivify.h</in>
+        <in>walk.c</in>
+        <in>walk.h</in>
+        <in>watch.c</in>
+        <in>watch.h</in>
+        <in>weaken.c</in>
+        <in>weaken.h</in>
+        <in>witness.c</in>
+        <in>witness.h</in>
+        <in>xors.c</in>
+        <in>xors.h</in>
+      </df>
+      <df name="test">
+        <df name="big">
+          <in>genbigand.c</in>
+        </df>
+        <df name="cnf">
+        </df>
+        <df name="cover">
+        </df>
+        <df name="file">
+        </df>
+        <df name="parse">
+        </df>
+        <in>test.c</in>
+        <in>test.h</in>
+        <in>testadd.c</in>
+        <in>testallocate.c</in>
+        <in>testapplication.c</in>
+        <in>testapplication.h</in>
+        <in>testarena.c</in>
+        <in>testbump.c</in>
+        <in>testcnfs.h</in>
+        <in>testcollect.c</in>
+        <in>testcoverage.c</in>
+        <in>testdivert.c</in>
+        <in>testdivert.h</in>
+        <in>testdump.c</in>
+        <in>testendianess.c</in>
+        <in>testerror.c</in>
+        <in>testfile.c</in>
+        <in>testformat.c</in>
+        <in>testheap.c</in>
+        <in>testinit.c</in>
+        <in>testmain.c</in>
+        <in>testmessages.c</in>
+        <in>testmessages.h</in>
+        <in>testoptions.c</in>
+        <in>testparse.c</in>
+        <in>testprove.c</in>
+        <in>testqueue.c</in>
+        <in>testrandom.c</in>
+        <in>testrank.c</in>
+        <in>testreferences.c</in>
+        <in>testreluctant.c</in>
+        <in>testscheduler.c</in>
+        <in>testscheduler.h</in>
+        <in>testsizes.c</in>
+        <in>testsolve.c</in>
+        <in>testsort.c</in>
+        <in>teststack.c</in>
+        <in>testterminate.c</in>
+        <in>testusage.c</in>
+        <in>testvector.c</in>
+      </df>
+    </df>
+    <df root="painless-src" name="1">
+      <df name="clauses">
+        <in>ClauseBuffer.h</in>
+        <in>ClauseDatabase.h</in>
+        <in>ClauseExchange.h</in>
+        <in>ClauseManager.h</in>
+      </df>
+      <df name="sharing">
+        <in>HordeSatSharing.h</in>
+        <in>Sharer.h</in>
+        <in>SharingStrategy.h</in>
+        <in>SimpleSharing.h</in>
+      </df>
+      <df name="solvers">
+        <in>KissatSolver.h</in>
+        <in>SolverFactory.h</in>
+        <in>SolverInterface.h</in>
+      </df>
+      <df name="utils">
+        <in>Logger.h</in>
+        <in>Parameters.h</in>
+        <in>SatUtils.h</in>
+        <in>System.h</in>
+        <in>Threading.h</in>
+      </df>
+      <df name="working">
+        <in>Portfolio.h</in>
+        <in>SequentialWorker.h</in>
+        <in>WorkingStrategy.h</in>
+      </df>
+      <in>painless.h</in>
+    </df>
+    <df root="." name="2">
       <df name="bin">
       </df>
-      <df name="MapleLCMDistChronoBT">
+      <df name="kissat">
         <df name="build">
-          <df name="dynamic">
-            <df name="lib">
-            </df>
-            <df name="MapleLCMDistChronoBT">
-              <df name="core">
-              </df>
-              <df name="simp">
-              </df>
-              <df name="utils">
-              </df>
-            </df>
-          </df>
-          <df name="release">
-            <df name="bin">
-            </df>
-            <df name="lib">
-            </df>
-            <df name="MapleLCMDistChronoBT">
-              <df name="core">
-              </df>
-              <df name="simp">
-              </df>
-              <df name="utils">
-              </df>
-            </df>
-          </df>
         </df>
-        <df name="MapleLCMDistChronoBT">
-          <df name="core">
-            <in>Dimacs.h</in>
-            <in>Main.cc</in>
-            <in>Solver.cc</in>
-            <in>Solver.h</in>
-            <in>SolverTypes.h</in>
+        <df name="scripts">
+        </df>
+        <df name="src">
+        </df>
+        <df name="test">
+          <df name="big">
           </df>
-          <df name="mtl">
-            <in>Alg.h</in>
-            <in>Alloc.h</in>
-            <in>Heap.h</in>
-            <in>IntTypes.h</in>
-            <in>Map.h</in>
-            <in>Queue.h</in>
-            <in>Sort.h</in>
-            <in>Vec.h</in>
-            <in>XAlloc.h</in>
+          <df name="cnf">
           </df>
-          <df name="simp">
-            <in>Main.cc</in>
-            <in>SimpSolver.cc</in>
-            <in>SimpSolver.h</in>
+          <df name="cover">
           </df>
-          <df name="utils">
-            <in>Options.cc</in>
-            <in>Options.h</in>
-            <in>ParseUtils.h</in>
-            <in>System.cc</in>
-            <in>System.h</in>
+          <df name="file">
+          </df>
+          <df name="parse">
           </df>
         </df>
       </df>
       <df name="painless-src">
         <df name="clauses">
           <in>ClauseBuffer.cpp</in>
-          <in>ClauseBuffer.h</in>
           <in>ClauseDatabase.cpp</in>
-          <in>ClauseDatabase.h</in>
-          <in>ClauseExchange.h</in>
-          <in>ClauseManager.h</in>
         </df>
         <df name="sharing">
           <in>HordeSatSharing.cpp</in>
-          <in>HordeSatSharing.h</in>
           <in>Sharer.cpp</in>
-          <in>Sharer.h</in>
-          <in>SharingStrategy.h</in>
           <in>SimpleSharing.cpp</in>
-          <in>SimpleSharing.h</in>
         </df>
         <df name="solvers">
-          <in>MapleLCMDistChronoBTSolver.cpp</in>
-          <in>MapleLCMDistChronoBTSolver.h</in>
+          <in>KissatSolver.cpp</in>
           <in>SolverFactory.cpp</in>
-          <in>SolverFactory.h</in>
-          <in>SolverInterface.h</in>
         </df>
         <df name="utils">
           <in>Logger.cpp</in>
-          <in>Logger.h</in>
           <in>Parameters.cpp</in>
-          <in>Parameters.h</in>
           <in>SatUtils.cpp</in>
-          <in>SatUtils.h</in>
           <in>System.cpp</in>
-          <in>System.h</in>
-          <in>Threading.h</in>
         </df>
         <df name="working">
           <in>Portfolio.cpp</in>
-          <in>Portfolio.h</in>
           <in>SequentialWorker.cpp</in>
-          <in>SequentialWorker.h</in>
-          <in>WorkingStrategy.h</in>
         </df>
         <in>painless.cpp</in>
-        <in>painless.h</in>
       </df>
     </df>
   </logicalFolder>

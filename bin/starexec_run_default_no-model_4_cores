@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./PaKis -no-model -c=4 $1

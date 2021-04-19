@@ -2,5 +2,5 @@
 
 #cd sources/simp
 make
-cp painless-MapleLCMDistChronoBT ./bin/painless-MapleLCMDistChronoBT
+cp PaKis ./bin/PaKis
 

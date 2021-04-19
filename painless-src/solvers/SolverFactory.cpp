@@ -17,7 +17,7 @@
 // this program.  If not, see <http://www.gnu.org/licenses/>.
 // -----------------------------------------------------------------------------
 
-#include "../solvers/MapleLCMDistChronoBTSolver.h"
+#include "../solvers/KissatSolver.h"
 #include "../solvers/SolverFactory.h"
 #include "../utils/Parameters.h"
 #include "../utils/System.h"
@@ -42,6 +42,36 @@ SolverFactory::sparseRandomDiversification(
 }
 
 void
+SolverFactory::randomDiversification(
+      const vector<SolverInterface *> & solvers)
+{
+   if (solvers.size() == 0)
+      return;
+
+   for (int sid = 0; sid < solvers.size(); sid++) {
+       solvers[sid]->randomDiversify(sid);
+   }
+}
+
+void
+SolverFactory::singleNativeAndRandomDiversification(const vector<SolverInterface *> & solvers, int confID)
+{
+    
+    vector<SolverInterface *> solversWithRandDiv;
+    
+    for (int sid = 0; sid < solvers.size(); sid++) {
+        if (sid != confID) solversWithRandDiv.push_back(solvers[sid]);
+    }
+    //Random diversification is applied except for one solver, that with the same id as confID
+    randomDiversification(solversWithRandDiv);
+    
+    
+    for (int sid = 0; sid < solvers.size(); sid++) {
+       solvers[sid]->diversify(confID);
+    }
+   
+}
+void
 SolverFactory::nativeDiversification(const vector<SolverInterface *> & solvers)
 {
    for (int sid = 0; sid < solvers.size(); sid++) {
@@ -50,33 +80,33 @@ SolverFactory::nativeDiversification(const vector<SolverInterface *> & solvers)
 }
 
 SolverInterface *
-SolverFactory::createMapleLCMDistChronoBTSolver()
+SolverFactory::createKissatSolver()
 {
    int id = currentIdSolver.fetch_add(1);
 
-   SolverInterface * solver = new MapleLCMDistChronoBTSolver(id);
+   SolverInterface * solver = new KissatSolver(id);
 
-   solver->loadFormula(Parameters::getFilename());
+//   solver->loadFormula(Parameters::getFilename());
 
    return solver;
 }
 
 void
-SolverFactory::createMapleLCMDistChronoBTSolvers(int maxSolvers,
+SolverFactory::createKissatSolvers(int maxSolvers,
                                   vector<SolverInterface *> & solvers)
 {
-   solvers.push_back(createMapleLCMDistChronoBTSolver());
+   solvers.push_back(createKissatSolver());
 
-   double memoryUsed    = getMemoryUsed();
-   int maxMemorySolvers = Parameters::getIntParam("max-memory", 51) * 1024 *
-                          1024 / memoryUsed;
-
-   if (maxSolvers > maxMemorySolvers) {
-      maxSolvers = maxMemorySolvers;
-   }
+//   double memoryUsed    = getMemoryUsed();
+//   int maxMemorySolvers = Parameters::getIntParam("max-memory", 51) * 1024 *
+//                          1024 / memoryUsed;
+//
+//   if (maxSolvers > maxMemorySolvers) {
+//      maxSolvers = maxMemorySolvers;
+//   }
 
    for (int i = 1; i < maxSolvers; i++) {
-      solvers.push_back(createMapleLCMDistChronoBTSolver());
+      solvers.push_back(createKissatSolver());
    }
 }
 
@@ -84,13 +114,14 @@ void
 SolverFactory::printStats(const vector<SolverInterface *> & solvers)
 {
    printf("c | ID | conflicts  | propagations |  restarts  | decisions  " \
-          "| memPeak |\n");
+          "| importedClauses | importedUnits| exportedClauses | exportedUnits|\n");
 
    for (size_t i = 0; i < solvers.size(); i++) {
       SolvingStatistics stats = solvers[i]->getStatistics();
 
-      printf("c | %2zu | %10ld | %12ld | %10ld | %10ld | %7d |\n",
+      printf("c | %2zu | %10ld | %12ld | %10ld | %10ld | %15ld | %12ld | %15ld | %12ld | \n",
              solvers[i]->id, stats.conflicts, stats.propagations,
-             stats.restarts, stats.decisions, (int)stats.memPeak);
+             stats.restarts, stats.decisions, stats.nbImportedClauses,stats.nbImportedUnits
+              , stats.nbExportedClauses,stats.nbExportedUnits);
    }
 }

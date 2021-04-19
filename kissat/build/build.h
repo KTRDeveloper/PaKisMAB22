@@ -1,0 +1,5 @@
+#define VERSION "1.0.3"
+#define COMPILER "gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 -W -Wall -O3 -DNEMBEDDED -DNDEBUG -DNMETRICS -DQUIET -DNSTATISTICS"
+#define ID "unknown"
+#define BUILD "Sun Apr 4 08:12:09 WAT 2021 Linux ktr-Latitude-E6520 4.15.0-137-generic x86_64"
+#define DIR "/home/ktr/Desktop/D/SC2021/PaKis/kissat/build"

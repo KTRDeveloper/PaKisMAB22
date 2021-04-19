@@ -48,7 +48,8 @@ enum SolverType
 	GLUCOSE   = 0,
 	LINGELING = 1,
 	MAPLE     = 2,
-	MINISAT   = 3
+	MINISAT   = 3,
+        CADICAL   = 4
 };
 
 
@@ -63,6 +64,10 @@ struct SolvingStatistics
       conflicts    = 0;
       restarts     = 0;
       memPeak      = 0;
+      nbImportedClauses = 0;
+      nbImportedUnits = 0;
+      nbExportedClauses = 0;
+      nbExportedUnits = 0;
    }
 
 	unsigned long propagations; ///< Number of propagations.
@@ -70,6 +75,10 @@ struct SolvingStatistics
 	unsigned long conflicts;    ///< Number of reached conflicts.
 	unsigned long restarts;     ///< Number of restarts.
 	double        memPeak;      ///< Maximum memory used in Ko.
+        unsigned long nbImportedClauses;
+        unsigned long nbImportedUnits;
+        unsigned long nbExportedClauses;
+        unsigned long nbExportedUnits;
 };
 
 
@@ -82,6 +91,8 @@ public:
 
    /// Get the number of variables of the current resolution.
    virtual int getVariablesCount() = 0;
+
+   virtual void setVariablesCount(int max_var) = 0;
 
    /// Get a variable suitable for search splitting.
    virtual int getDivisionVariable() = 0;
@@ -133,7 +144,10 @@ public:
 
    /// Native diversification.
    virtual void diversify(int id) = 0;
-
+   
+   // Random diversification.
+   virtual void randomDiversify(int id) = 0;
+   
    /// Constructor.
    SolverInterface(int solverId, SolverType solverType)
    {

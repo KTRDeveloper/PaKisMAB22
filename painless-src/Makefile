@@ -12,12 +12,12 @@ EXEC = painless
 #           -D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS \
 #           -std=c++11 -O3 -D NDEBUG
 
-LIBS = -lMapleLCMDistChronoBT -L../MapleLCMDistChronoBT/build/release/lib/ \
-       -lpthread -lz -lm -static
+LIBS = -lkissat -L../kissat/build \
+       -lpthread -fopenmp -lz -lm -static
 
-CXXFLAGS = -I../MapleLCMDistChronoBT \
-           -D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS \
-           -std=c++11 -O3 -D NDEBUG
+#CXXFLAGS = -I../kissat \
+#           -D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS \
+#           -std=c++11 -O3 -D NDEBUG
 
 $(EXEC): $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-./painless-MapleLCMDistChronoBT -n-sharers=24 -strategy=1 $1

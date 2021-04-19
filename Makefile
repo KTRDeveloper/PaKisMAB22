@@ -1,41 +1,28 @@
-# export LIBRARY_PATH=$(CURDIR)/cosy/lib/:$(CURDIR)/cosy/third_party/automorphism/bliss/:
-# export CPATH=$(CURDIR)/cosy/include/:$(CURDIR)/cosy/third_party/automorphism/:
 
 all:
 	##################################################
-	###                  Cosy                      ###
+	###               kissat		       ###
 	##################################################
-	# + $(MAKE) -C cosy third_party
-	# + $(MAKE) -C cosy
-	##################################################
-	###               MapleLCMDistChronoBT                  ###
-	##################################################
-	# cd mapleCOMSPS && tar zxvf m4ri-20140914.tar.gz
-	# cd mapleCOMSPS/m4ri-20140914 && ./configure
-	# + $(MAKE) -C mapleCOMSPS/m4ri-20140914
-	+ $(MAKE) -C MapleLCMDistChronoBT
+#	( cd ./kissat && ./configure --competition)
+	( cd ./kissat && ./configure --quiet)
+	+ $(MAKE) -C kissat
 
 	##################################################
-	###                 PaInleSS                   ###
+	###                 PaKis                      ###
 	##################################################
 	+ $(MAKE) -C painless-src
-	mv painless-src/painless painless-MapleLCMDistChronoBT
-
+	mv painless-src/painless PaKis
+para:
+	+ $(MAKE) -C painless-src
+	mv painless-src/painless PaKis
 clean:
 	##################################################
-	###                  Cosy                      ###
+	###               PaKiss		       ###
 	##################################################
-	# + $(MAKE) -C cosy clean-third_party
-	# + $(MAKE) -C cosy cleanall
+	+ $(MAKE) -C kissat clean
 
 	##################################################
-	###               MapleLCMDistChronoBT                  ###
-	##################################################
-	#rm -rf mapleCOMSPS/m4ri-20140914
-	+ $(MAKE) -C MapleLCMDistChronoBT clean
-
-	##################################################
-	###                 PaInleSS                   ###
+	###                 PaKiss                     ###
 	##################################################
 	+ $(MAKE) clean -C painless-src
-	rm -f painless-MapleLCMDistChronoBT
+	rm -f PaKis

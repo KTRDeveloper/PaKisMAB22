@@ -32,10 +32,10 @@ class SolverFactory
 {
 public:
    /// Instantiate and return a MapleCOMSPS solver.
-   static SolverInterface * createMapleLCMDistChronoBTSolver();
+   static SolverInterface * createKissatSolver();
 
    /// Instantiate and return a group of MapleCOMSPS solvers.
-   static void createMapleLCMDistChronoBTSolvers(int groupSize,
+   static void createKissatSolvers(int groupSize,
                                         vector<SolverInterface *> & solvers);
 
    /// Print stats of a groupe of solvers.
@@ -44,6 +44,15 @@ public:
    /// Apply a sparse and random diversification on solvers.
    static void sparseRandomDiversification(const
                                            vector<SolverInterface *> & solvers);
+   
+   /// Apply a random diversification on solvers.
+   static void randomDiversification(const
+                                           vector<SolverInterface *> & solvers);
+   
+   // Apply random diversification first and then apply the single diversification
+   static void singleNativeAndRandomDiversification(const
+                                           vector<SolverInterface *> & solvers, int confId);
+   
 
    /// Apply a native diversification on solvers.
    static void nativeDiversification(const vector<SolverInterface *> & solvers);
