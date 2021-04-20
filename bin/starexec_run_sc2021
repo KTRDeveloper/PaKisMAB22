@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./PaKis -c=24 -max-memory=256 $1
