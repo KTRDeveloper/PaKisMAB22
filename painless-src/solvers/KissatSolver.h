@@ -27,20 +27,12 @@
 
 using namespace std;
 
-// Some forward declatarations for MapleCOMSPS
-//namespace Minisat
-//{
-//	class SimpSolver;
-//	class Lit;
-//	template<class T> class vec;
-//}
 
 class CaDiCalSolverLearner;
 
-/// Instance of a MapleCOMSPS solver
+/// Instance of KissatSolver solver
 class KissatSolver : public SolverInterface
 {
-//    friend CaDiCalSolverLearner;
 public:
    /// Load formula from a given dimacs file, return false if failed.
    bool loadFormula(const char* filename);
@@ -135,31 +127,3 @@ protected:
    friend bool cbkKissatImportClause(void *, int *, vector<int> &);
    friend void cbkKissatExportClause(void *, int, vector<int> &);
 };
-
-//class CaDiCalSolverLearner : CaDiCaL::Learner {
-//  CaDiCalSolver * cSolver;
-//  std::vector<int> clause;
-//  int glue;
-//public:
-//  unsigned clauses;
-//  CaDiCalSolverLearner (CaDiCalSolver * s) : cSolver (s), clauses (0) { cSolver->solver->connect_learner (this); }
-//  ~CaDiCalSolverLearner () { cSolver->solver->disconnect_learner (); }
-//  bool learning (int size, int glue) { // learning should be always called before learn
-//      if (glue > cSolver->lbdLimit) return false;
-//      this->glue = glue;
-//      return true; 
-//  }
-//  void learn (int lit) {
-//    if (lit) clause.push_back (lit);
-//    else {
-//        cbkCaDiCalExportClause(cSolver, glue, clause);
-////      std::cout << "solver[" << ((void*) solver) << "] imported clause of size "
-////                << clause.size () << ':';
-////      for (auto lit : clause)
-////	std::cout << ' ' << lit;
-////      std::cout << std::endl << std::flush;
-//      clause.clear ();
-//      clauses++;
-//    }
-//  }
-//};

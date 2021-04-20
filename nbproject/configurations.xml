@@ -57,6 +57,7 @@
         <element flagsID="0" commonFlags="-std=c++11 -O3"/>
       </flagsDictionary>
       <codeAssistance>
+        <includeAdditional>true</includeAdditional>
       </codeAssistance>
       <makefileType>
         <makeTool>
