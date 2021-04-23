@@ -1,4 +1,30 @@
 ##########################################################
+#####        		PaKis		             #####
+##########################################################
+
+Authors: Rodrigue Konan Tchinda, Clémentin Tayou Djamegni
+	  University of Dschang, Cameroon
+
+===== To compile the project =====
+
+- In the PaKis home directory use 'make' to compile.
+
+- In the PaKis home directory use 'make clean' to clean.
+
+
+===== To run the solvers =====
+
+ - PaKis :
+   ./PaKis dimacs_filename
+
+==== Configuration submitted to the parallel Track of the 2021 SAT Competition
+   ./PaKis -c=24 -max-memory=256 dimacs_filename
+
+
+
+
+
+##########################################################
 ##### PaInleSS: A Framework for Parallel SAT Solving #####
 ##########################################################
 
