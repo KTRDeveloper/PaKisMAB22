@@ -8,9 +8,10 @@ RUN apt-get install zlib1g-dev -y
 ADD kissat /kissat
 ADD painless-src /painless-src
 ADD Makefile /Makefile
+ADD run.sh /run.sh
 RUN make all
 ADD bin /bin
 
-CMD bin/starexec_run_sc2021
+CMD /run.sh
 
 

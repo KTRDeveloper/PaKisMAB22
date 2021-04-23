@@ -324,7 +324,8 @@ KissatSolver::diversify(int id)
     int target = kissat_get_option(solver, "target");
     int tier1 = kissat_get_option(solver, "tier1");
     int phase = kissat_get_option(solver, "phase");
-    printf("\nc id = %d / %s=%d / %s=%d / %s=%d / %s=%d / %s=%d/ %s=%d", id, "tier1", tier1, "chrono", chrono, "stable", stable, "walkinitially", walkinitially, "target", target, "phase", phase);
+    printf("\nc time = %f s ** id = %d / %s=%d / %s=%d / %s=%d / %s=%d / %s=%d/ %s=%d",getRelativeTime(), id, "tier1", tier1, "chrono", chrono, "stable", stable, "walkinitially", walkinitially, "target", target, "phase", phase);
+    fflush(stdout);
 }
 
 // Diversify the solver
@@ -361,7 +362,8 @@ KissatSolver::solve(const vector<int> & cube)
 
    if(res == 10 || res == 20) {
        kissat_print_statistics(solver);
-       printf("\nc ##### Solver id: %d / answer = %s", id, res == 10 ? "SAT" : "UNSAT");
+       printf("\nc time = %f *** ##### Solver id: %d / answer = %s\n",getRelativeTime(), id, res == 10 ? "SAT" : "UNSAT");
+       fflush(stdout);
    }
    
    if (res == 10)
@@ -465,10 +467,9 @@ KissatSolver::getModel()
    std::vector<int> model;
 
    for (unsigned i = 1; i <= getVariablesCount(); i++) {
-      if (kissat_value(solver, i) != 0) {
-         int lit = kissat_value(solver, i) > 0 ? i : -i;
-         model.push_back(lit);
-      }
+       int lit = kissat_value(solver, i);
+       if(lit == 0) lit = i;
+       model.push_back(lit);
    }
 
    return model;

@@ -153,6 +153,11 @@ bool loadFormulaToSolvers(vector<SolverInterface*> solvers,
 		solvers[i]->addInitialClauses(clauses);
 		solvers[i]->setVariablesCount(max_var);
 	}
-
+        
+        
+        for (size_t i = 0; i < clauses.size(); i++) {
+            free(clauses[i]);
+        }
+        
 	return true;
 }

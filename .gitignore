@@ -2,3 +2,7 @@
 **/*.zip
 nbproject/
 kissat/build/
+PaKis
+bin/PaKis
+PaKis_no_para_cnf_loading
+__bin

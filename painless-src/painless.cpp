@@ -86,8 +86,11 @@ int main(int argc, char ** argv)
    SolverFactory::createKissatSolvers(cpus, solvers);
    SolverFactory::nativeDiversification(solvers);
    
-   
+   double startLoadingTime = getRelativeTime();
    loadFormulaToSolvers(solvers, Parameters::getFilename());
+   cout << "\nc Formula loading time: " << getRelativeTime() - startLoadingTime << "s" << endl;
+   fflush(stdout);
+   
    int nSolvers = solvers.size();
 
    cout << "c " << nSolvers << " solvers are used, with IDs in [|0, "
