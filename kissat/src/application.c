@@ -13,6 +13,7 @@
 #include <inttypes.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 typedef struct application application;
 
@@ -601,6 +602,17 @@ parse_options (application * application, int argc, char **argv)
 	ERROR ("can not use '--quiet' ('-q') with '--verbose' ('-v')");
     }
 #endif
+  solver->step_chb = 0.1*GET_OPTION(stepchb);
+  solver->heuristic = GET_OPTION(heuristic);
+  solver->mab = GET_OPTION(mab);
+  if(solver->mab) {
+	for (unsigned i=0;i<solver->mab_heuristics;i++) {
+		solver->mab_reward[i] = 0; 
+		solver->mab_select[i] = 0;
+	}
+	solver->mabc = GET_OPTION(mabcint)+0.1*GET_OPTION(mabcdecimal);
+	solver->mab_select[solver->heuristic]++; 
+  }
   return true;
 }
 
@@ -770,6 +782,39 @@ print_limits (application * application)
 
 #endif
 
+
+/*void kissat_check_a (kissat * solver)
+{
+  kissat_message (solver, "checking assignment\n");
+  const int *begin = BEGIN_STACK (solver->original);
+  const int *end = END_STACK (solver->original), *q;
+
+  size_t count = 0;
+
+  for (const int *p = begin; p != end; p = q + 1)
+    {
+      bool satisfied = false;
+      int lit;
+      for (q = p; (lit = *q); q++)
+	if (!satisfied && kissat_value (solver, lit) == lit)
+	  satisfied = true;
+
+      count++;
+
+      if (satisfied)
+	continue;
+      kissat_fatal_message_start ();
+      fputs ("unsatisfied clause:\n", stderr);
+      for (q = p; (lit = *q); q++)
+	fprintf (stderr, "%d ", lit);
+      fputs ("0\n", stderr);
+      fflush (stderr);
+      kissat_abort ();
+    }
+    kissat_message (solver, "assignment satisfies all original clauses\n");
+
+}*/
+
 int
 kissat_application (kissat * solver, int argc, char **argv)
 {
@@ -818,6 +863,7 @@ kissat_application (kissat * solver, int argc, char **argv)
 	  if (GET_OPTION (check))
 	    kissat_check_satisfying_assignment (solver);
 #endif
+	  /*kissat_check_a (solver);*/
 	  printf ("s SATISFIABLE\n");
 	  fflush (stdout);
 	  if (application.witness)

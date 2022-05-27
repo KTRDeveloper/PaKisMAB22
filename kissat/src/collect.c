@@ -278,7 +278,7 @@ static void
 move_redundant_clauses_to_the_end (kissat * solver, reference ref)
 {
   INC (moved);
-  assert (ref != INVALID_REF);
+  assert (ref != INVALID_REF);  
 #ifndef NDEBUG
   const size_t size = SIZE_STACK (solver->arena);
   assert ((size_t) ref <= size);
@@ -291,14 +291,14 @@ move_redundant_clauses_to_the_end (kissat * solver, reference ref)
 		"moving redundant clauses of %s to the end",
 		FORMAT_BYTES (bytes_redundant));
   kissat_mark_reason_clauses (solver, ref);
-  clause *redundant = (clause *) kissat_malloc (solver, bytes_redundant);
+  clause *redundant = (clause *) kissat_malloc (solver, bytes_redundant); 
+
   clause *p = begin, *q = begin, *r = redundant;
 
   const value *values = solver->values;
   assigned *assigned = solver->assigned;
 
-  clause *last_irredundant = kissat_last_irredundant_clause (solver);
-
+  clause *last_irredundant = kissat_last_irredundant_clause (solver);  
   while (p != end)
     {
       assert (!p->shrunken);
@@ -341,7 +341,7 @@ move_redundant_clauses_to_the_end (kissat * solver, reference ref)
   assert (!first_reducible || first_reducible < q);
 
   update_first_reducible (solver, q, first_reducible);
-  update_last_irredundant (solver, q, last_irredundant);
+  update_last_irredundant (solver, q, last_irredundant); 
 }
 
 static reference
@@ -699,21 +699,22 @@ kissat_sparse_collect (kissat * solver, bool compact, reference start)
   INC (garbage_collections);
   INC (sparse_garbage_collections);
   REPORT (1, 'G');
-  unsigned vars, mfixed;
+  unsigned vars, mfixed;     
   if (compact)
     vars = kissat_compact_literals (solver, &mfixed);
   else
     {
       vars = solver->vars;
       mfixed = INVALID_LIT;
-    }
-  flush_all_watched_clauses (solver, compact, start);
+    }      
+  flush_all_watched_clauses (solver, compact, start); 
   reference move = sparse_sweep_garbage_clauses (solver, compact, start);
   if (compact)
-    kissat_finalize_compacting (solver, vars, mfixed);
+    kissat_finalize_compacting (solver, vars, mfixed);  
   if (move != INVALID_REF)
-    move_redundant_clauses_to_the_end (solver, move);
-  rewatch_clauses (solver, start);
+    move_redundant_clauses_to_the_end (solver, move); 
+ 
+  rewatch_clauses (solver, start);  
   REPORT (1, 'C');
   kissat_check_statistics (solver);
   STOP (collect);

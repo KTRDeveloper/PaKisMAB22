@@ -37,6 +37,13 @@ kissat_init (void)
   solver->scinc = 1.0;
   solver->first_reducible = INVALID_REF;
   solver->last_irredundant = INVALID_REF;
+// CHB 
+  solver->step_dec_chb = 0.000001;
+  solver->step_min_chb = 0.06;
+// MAB
+  solver->mab_heuristics = 2;
+  solver-> mab_decisions = 0;
+  solver-> mab_chosen_tot = 0;
 #ifndef NDEBUG
   kissat_init_checker (solver);
 #endif
@@ -49,6 +56,7 @@ do { \
   kissat_dealloc (solver, solver->NAME, solver->size, block_size); \
   solver->NAME = 0; \
 } while (0)
+
 
 #define DEALLOC_VARIABLE_INDEXED(NAME) \
   DEALLOC_GENERIC (NAME, 1)
@@ -74,6 +82,11 @@ kissat_release (kissat * solver)
   kissat_require_initialized (solver);
 
   kissat_release_heap (solver, &solver->scores);
+
+// CHB
+  kissat_release_heap (solver, &solver->scores_chb);
+  DEALLOC_VARIABLE_INDEXED (conflicted_chb);
+
   kissat_release_heap (solver, &solver->schedule);
 
   kissat_release_clueue (solver, &solver->clueue);
@@ -240,6 +253,11 @@ kissat_print_statistics (kissat * solver)
   kissat_section (solver, "statistics");
   const bool verbose = (complete || verbosity > 0);
   kissat_statistics_print (solver, verbose);
+  if(solver->mab) {
+	printf("c MAB stats : ");
+        for (unsigned i=0;i<solver->mab_heuristics;i++) printf("%d ",solver->mab_select[i]);
+	printf("\n");
+  }
 #ifndef NPROOFS
   if (solver->proof)
     {
@@ -569,4 +587,3 @@ kissat_value (kissat * solver, int elit)
     tmp = -tmp;
   return tmp < 0 ? -elit : elit;
 }
-

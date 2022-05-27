@@ -2,6 +2,7 @@
 
 #include "inline.h"
 #include "propsearch.h"
+#include "bump.h"
 
 // Keep this 'inlined' file separate:
 
@@ -67,6 +68,9 @@ search_propagate (kissat * solver)
   return res;
 }
 
+
+
+
 clause *
 kissat_search_propagate (kissat * solver)
 {
@@ -83,8 +87,19 @@ kissat_search_propagate (kissat * solver)
   update_consistently_assigned (solver);
   if (conflict)
     INC (conflicts);
-
   STOP (propagate);
+
+  // CHB
+  if(solver->stable && solver->heuristic==1){
+      int i = SIZE_STACK (solver->trail) - 1;
+      unsigned lit = i>=0?PEEK_STACK (solver->trail, i):0;  
+      while(i>=0 && LEVEL(lit)==solver->level){
+	    lit = PEEK_STACK (solver->trail, i);
+            kissat_bump_chb(solver,IDX(lit), conflict? 1.0 : 0.9); 
+	    i--;	    
+      }
+  }  
+  if(solver->stable && solver->heuristic==1 && conflict) kissat_decay_chb(solver);
 
   return conflict;
 }

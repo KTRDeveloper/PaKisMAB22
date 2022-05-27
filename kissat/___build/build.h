@@ -1,0 +1,5 @@
+#define VERSION "1.0.3"
+#define COMPILER "gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 -W -Wall -O3 -DCOMPACT -DNEMBEDDED -DNDEBUG -DNMETRICS -DNPROOFS -DQUIET -DNSTATISTICS"
+#define ID "79d8d8f20465e71fd2b0f193b468898cd803a59a"
+#define BUILD "Fri May 6 20:34:16 WAT 2022 Linux ktr-Latitude-E6520 4.15.0-153-generic x86_64"
+#define DIR "/home/ktr/Desktop/D/SC2022/Solvers/PaKisMAB/kissat/build"

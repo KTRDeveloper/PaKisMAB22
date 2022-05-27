@@ -1,3 +1,0 @@
-#!/bin/bash
-
-./PaKis -c=4 $1

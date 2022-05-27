@@ -97,7 +97,7 @@ kissat_backtrack (kissat * solver, unsigned new_level)
   unsigned j = new_size;
   if (solver->stable)
     {
-      heap *scores = &solver->scores;
+      heap *scores = solver->heuristic==0?&solver->scores:&solver->scores_chb;
       for (unsigned i = j; i != old_size; i++)
 	{
 	  const unsigned lit = trail[i];

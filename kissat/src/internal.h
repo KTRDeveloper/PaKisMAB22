@@ -1,11 +1,6 @@
 #ifndef _internal_h_INCLUDED
 #define _internal_h_INCLUDED
-#ifdef __cplusplus
-// this opens an extern "C" block, but only if being included for a C++ compile
-//  if this is being included in a C compile, the extern "C" bits won't be seen
-extern "C" {
-#endif
-    
+
 #include "arena.h"
 #include "assign.h"
 #include "averages.h"
@@ -123,6 +118,24 @@ struct kissat
 
   heap scores;
   double scinc;
+
+// CHB 
+  heap scores_chb;
+  unsigned *conflicted_chb;
+  double step_chb;
+  double step_dec_chb;
+  double step_min_chb;
+
+// MAB
+  unsigned heuristic;
+  bool mab;
+  double mabc;
+  double mab_reward[2];
+  unsigned mab_select[2];
+  unsigned mab_heuristics;
+  double mab_decisions;
+  unsigned *mab_chosen;
+  unsigned mab_chosen_tot;
 
   heap schedule;
 
@@ -249,8 +262,4 @@ kissat_assigned (kissat * solver)
   C != C_END && (C_NEXT = kissat_next_clause (C), true); \
   C = C_NEXT
 
-#endif
-
-#ifdef __cplusplus
-}
 #endif

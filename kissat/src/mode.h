@@ -19,5 +19,6 @@ struct mode
 };
 
 void kissat_switch_search_mode (struct kissat *);
+void kissat_update_scores (struct kissat *);
 
 #endif

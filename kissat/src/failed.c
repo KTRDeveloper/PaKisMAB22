@@ -190,7 +190,7 @@ static void
 sort_stable_probes (kissat * solver, unsigneds * probes)
 {
   const flags *flags = solver->flags;
-  const heap *scores = &solver->scores;
+  const heap *scores = solver->heuristic==0?&solver->scores:&solver->scores_chb;
   SORT_STACK (unsigned, *probes, LESS_STABLE_PROBE);
 }
 
@@ -242,7 +242,7 @@ probe_round (kissat * solver, unsigned round,
 	continue;
       if (solver->stable)
 	LOG ("probing %s[%g]", LOGLIT (probe),
-	     kissat_get_heap_score (&solver->scores, IDX (probe)));
+	     kissat_get_heap_score (solver->heuristic==0?&solver->scores:&solver->scores_chb, IDX (probe)));
       else
 	LOG ("probing %s{%u}", LOGLIT (probe), LINK (IDX (probe)).stamp);
       probed++;

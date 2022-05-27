@@ -25,7 +25,7 @@ then
   ID="`git show 2>/dev/null|awk '{print $2; exit}'`"
   [ "$ID" = "" ] && die "could not get git id with 'git show'"
 else
-  ID=unknown
+  ID=79d8d8f20465e71fd2b0f193b468898cd803a59a
 fi
 #END-CUT-OUT-ID
 cat <<EOF

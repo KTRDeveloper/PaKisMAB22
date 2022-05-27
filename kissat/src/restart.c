@@ -9,6 +9,7 @@
 #include "restart.h"
 
 #include <inttypes.h>
+#include <math.h>
 
 bool
 kissat_restarting (kissat * solver)
@@ -50,7 +51,7 @@ static unsigned
 reuse_stable_trail (kissat * solver)
 {
   const unsigned next_idx = kissat_next_decision_variable (solver);
-  const heap *scores = &solver->scores;
+  const heap *scores = solver->heuristic==0?&solver->scores:&solver->scores_chb;
   const unsigned next_idx_score = kissat_get_heap_score (scores, next_idx);
   LOG ("next decision variable score %u", next_idx_score);
   unsigned res = 0;
@@ -110,20 +111,54 @@ reuse_trail (kissat * solver)
   return res;
 }
 
+void restart_mab(kissat * solver){   
+	unsigned stable_restarts = 0;
+	solver->mab_reward[solver->heuristic] += !solver->mab_chosen_tot?0:log2(solver->mab_decisions)/solver->mab_chosen_tot;
+	for (all_variables (idx)) solver->mab_chosen[idx]=0;
+	solver->mab_chosen_tot = 0;
+	solver->mab_decisions = 0;
+	for(unsigned i=0;i<solver->mab_heuristics;i++) stable_restarts +=  solver->mab_select[i];
+	if(stable_restarts < solver->mab_heuristics) {
+		solver->heuristic = solver->heuristic==0?1:0; 
+	}else{
+		double ucb[2];
+		solver->heuristic = 0;
+		for(unsigned i=0;i<solver->mab_heuristics;i++) {
+		     ucb[i] = solver->mab_reward[i]/solver->mab_select[i] + sqrt(solver->mabc*log(stable_restarts+1)/solver->mab_select[i]);
+		     if(i!=0 && ucb[i]>ucb[solver->heuristic]) solver->heuristic = i;
+		  }
+	}
+	solver->mab_select[solver->heuristic]++; 
+}
+
 void
 kissat_restart (kissat * solver)
 {
-  START (restart);
+  START (restart);  
   INC (restarts);
-  unsigned level = reuse_trail (solver);
+  
+  unsigned old_heuristic = solver->heuristic;
+  if (solver->stable && solver->mab) 
+     restart_mab(solver);
+  unsigned new_heuristic = solver->heuristic;
+
+  unsigned level = old_heuristic==new_heuristic?reuse_trail (solver):0;
+
   kissat_extremely_verbose (solver,
 			    "restarting after %" PRIu64 " conflicts"
 			    " (scheduled at %" PRIu64 ")",
 			    CONFLICTS, solver->limits.restart.conflicts);
   LOG ("restarting to level %u", level);
+
+  if (solver->stable && solver->mab) solver->heuristic = old_heuristic;
   kissat_backtrack (solver, level);
+  if (solver->stable && solver->mab) solver->heuristic = new_heuristic;
+
   if (!solver->stable)
     kissat_new_focused_restart_limit (solver);
+
+  if (solver->stable && solver->mab && old_heuristic!=new_heuristic) kissat_update_scores(solver);
+
   REPORT (1, 'R');
-  STOP (restart);
+  STOP (restart); 
 }

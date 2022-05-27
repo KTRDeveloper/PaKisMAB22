@@ -256,8 +256,13 @@ kissat_analyze (kissat * solver, clause * conflict)
 	    analyze_reason_side_literals (solver);
 	  reset_markings (solver);
 	  kissat_learn_clause (solver);
-	  if (!solver->probing)
+
+	  // MAB
+	  if (!solver->probing && (!solver->stable || solver->heuristic==0))
 	    kissat_bump_variables (solver);
+	  if(!solver->probing && solver->stable && (solver->heuristic==1))
+	    kissat_update_conflicted_chb (solver);
+          
 	  reset_analyze (solver);
 	  reset_levels (solver);
 	  res = 1;

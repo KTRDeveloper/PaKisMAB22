@@ -28,7 +28,7 @@ probing_propagate (kissat * solver, clause * ignore)
 
 clause *
 kissat_probing_propagate (kissat * solver, clause * ignore)
-{
+{ 
   assert (solver->probing);
   assert (solver->watching);
   assert (!solver->inconsistent);

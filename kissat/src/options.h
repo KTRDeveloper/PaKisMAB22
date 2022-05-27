@@ -44,10 +44,14 @@ OPTION( failedreleff, 2, 0, 1e3, "relative efficiency in per mille") \
 OPTION( failedrounds, 2, 1, 100, "failed literal probing rounds") \
 OPTION( forcephase, 0, 0, 1, "force initial phase") \
 OPTION( forward, 1, 0, 1, "forward subsumption in BVE") \
+OPTION( heuristic, 0, 0, 1, "scoring heuristic (0=VSIDS,1=CHB)") \
 OPTION( hyper, 1, 0, 1, "on-the-fly hyper binary resolution") \
 OPTION( ifthenelse, 1, 0, 1, "extract and eliminate if-then-else gates") \
 OPTION( incremental, 0, 0, 1, "enable incremental solving") \
 LOGOPT( log, 0, 0, 5, "logging level (1=on,2=more,3=check,4/5=mem)") \
+OPTION( mab, 1, 0, 1, "enable MAB") \
+OPTION( mabcdecimal, 0, 0, 9, "mab const decimal") \
+OPTION( mabcint, 4, 0, 10, "mab const floor") \
 OPTION( minimizedepth, 1e3, 1, 1e6, "minimization depth") \
 OPTION( modeinit, 1e3, 10, 1e8, "initial mode change interval") \
 OPTION( modeint, 1e3, 10, 1e8, "base mode change interval") \
@@ -80,6 +84,7 @@ OPTION( simplify, 1, 0, 1, "enable probing and elimination") \
 OPTION( stable, STABLE_DEFAULT, 0, 2, "enable stable search mode") \
 OPTION( stablebias, 100, 0, 1e3, "stable bias in percent") \
 NQTOPT( statistics, 0, 0, 1, "print complete statistics") \
+OPTION( stepchb, 4, 1, 9, "CHB step paramater") \
 OPTION( substitute, 1, 0, 1, "equivalent literal substitution") \
 OPTION( substitutelim, 1e7, 0, INT_MAX, "substitute multiple round limit") \
 OPTION( substitutemineff, 1e6, 0, INT_MAX, "minimum efficiency") \

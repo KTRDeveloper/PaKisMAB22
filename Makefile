@@ -4,7 +4,8 @@ all:
 	###               kissat		       ###
 	##################################################
 #	( cd ./kissat && ./configure --competition)
-	( cd ./kissat && ./configure --quiet --compact --no-proofs --no-statistics)
+#	( cd ./kissat && ./configure --quiet --compact --no-proofs --no-statistics)
+	( cd ./kissat && ./configure --quiet --compact --no-proofs)
 	+ $(MAKE) -C kissat
 
 	##################################################

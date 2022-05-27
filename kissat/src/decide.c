@@ -32,17 +32,27 @@ last_enqueued_unassigned_variable (kissat * solver)
 }
 
 static unsigned
-largest_score_unassigned_variable (kissat * solver)
+largest_score_unassigned_variable (kissat * solver, heap * heap)
 {
-  unsigned res = kissat_max_heap (&solver->scores);
+  unsigned res = kissat_max_heap (heap);
   const value *values = solver->values;
   while (values[LIT (res)])
     {
-      kissat_pop_heap (solver, &solver->scores, res);
-      res = kissat_max_heap (&solver->scores);
+      kissat_pop_heap (solver, heap, res);
+      res = kissat_max_heap (heap);
     }
+
+  // MAB
+  if(solver->mab) {
+	solver->mab_decisions++;
+	if(!solver->mab_chosen[res]){
+		solver->mab_chosen_tot++;
+		solver->mab_chosen[res] = 1;
+	}
+  }
+
 #if defined(LOGGING) || defined(CHECK_HEAP)
-  const double score = kissat_get_heap_score (&solver->scores, res);
+  const double score = kissat_get_heap_score (heap, res);
 #endif
   LOG ("largest score unassigned variable %u score %g", res, score);
 #ifdef CHECK_HEAP
@@ -50,7 +60,7 @@ largest_score_unassigned_variable (kissat * solver)
     {
       if (VALUE (LIT (idx)))
 	continue;
-      const double idx_score = kissat_get_heap_score (&solver->scores, idx);
+      const double idx_score = kissat_get_heap_score (heap, idx);
       assert (score >= idx_score);
     }
 #endif
@@ -62,7 +72,7 @@ kissat_next_decision_variable (kissat * solver)
 {
   unsigned res;
   if (solver->stable)
-    res = largest_score_unassigned_variable (solver);
+    res = largest_score_unassigned_variable (solver,solver->heuristic==0?&solver->scores:&solver->scores_chb);
   else
     res = last_enqueued_unassigned_variable (solver);
   LOG ("next decision variable %u", res);

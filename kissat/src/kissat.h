@@ -7,7 +7,7 @@
 //  if this is being included in a C compile, the extern "C" bits won't be seen
 extern "C" {
 #endif
-    
+
 typedef struct kissat kissat;
 
 // Default (partial) IPASIR interface.
@@ -23,6 +23,7 @@ void kissat_release (kissat * solver);
 void kissat_set_terminate (kissat * solver,
 			   void *state, int (*terminate) (void *state));
 
+// Additional API functions.
 
 void kissat_reserve (kissat * solver, int max_var);
 
@@ -42,9 +43,12 @@ void kissat_set_decision_limit (kissat * solver, unsigned);
 
 void kissat_print_statistics (kissat * solver);
 
+
+
 #ifdef __cplusplus
 // close the extern "C" block, but only if we started it in the first place
 }
 #endif
+
 
 #endif

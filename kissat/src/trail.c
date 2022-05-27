@@ -24,10 +24,10 @@ kissat_mark_reason_clauses (kissat * solver, reference start)
   assert (!solver->unflushed);
 #ifdef LOGGING
   unsigned reasons = 0;
-#endif
-  word *arena = BEGIN_STACK (solver->arena);
+#endif 
+  word *arena = BEGIN_STACK (solver->arena); 
   for (all_stack (unsigned, lit, solver->trail))
-    {
+    { 
       assigned *a = ASSIGNED (lit);
       assert (a->level > 0);
       if (a->binary)
@@ -39,7 +39,7 @@ kissat_mark_reason_clauses (kissat * solver, reference start)
       if (ref < start)
 	continue;
       clause *c = (clause *) (arena + ref);
-      assert (kissat_clause_in_arena (solver, c));
+      assert (kissat_clause_in_arena (solver, c)); 
       c->reason = true;
 #ifdef LOGGING
       reasons++;
@@ -59,10 +59,10 @@ kissat_restart_and_flush_trail (kissat * solver)
 #ifndef NDEBUG
   clause *conflict =
 #endif
-    kissat_search_propagate (solver);
+    kissat_search_propagate (solver);   
   assert (!conflict);
   if (solver->unflushed)
-    kissat_flush_trail (solver);
+    kissat_flush_trail (solver);   
 }
 
 bool

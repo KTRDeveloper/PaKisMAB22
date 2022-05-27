@@ -56,7 +56,7 @@ kissat_signal (kissat * solver, const char *type, int sig)
   TERMINAL (stdout, 1);
   fputs ("c ", stdout);
   COLOR (BOLD RED);
-  // printf ("%s signal %d (%s)", type, sig, kissat_signal_name (sig));
+  printf ("%s signal %d (%s)", type, sig, kissat_signal_name (sig));
   COLOR (NORMAL);
   fputc ('\n', stdout);
   fflush (stdout);

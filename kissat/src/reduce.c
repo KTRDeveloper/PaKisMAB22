@@ -195,26 +195,26 @@ compacting (kissat * solver)
 
 static void
 force_restart_before_reduction (kissat * solver)
-{
+{    
   if (!GET_OPTION (reducerestart))
     return;
   if (!solver->stable && (GET_OPTION (reducerestart) < 2))
     return;
-  LOG ("forcing restart before reduction");
-  kissat_restart_and_flush_trail (solver);
+   printf("\nbegin force res\n");
+  kissat_restart_and_flush_trail (solver); 
 }
 
 int
 kissat_reduce (kissat * solver)
 {
   START (reduce);
-  INC (reductions);
+  INC (reductions);   LOG ("beginreduce");
   kissat_phase (solver, "reduce", GET (reductions),
 		"reduce limit %" PRIu64 " hit after %" PRIu64
 		" conflicts", solver->limits.reduce.conflicts, CONFLICTS);
   force_restart_before_reduction (solver);
   bool compact = compacting (solver);
-  reference start = compact ? 0 : solver->first_reducible;
+  reference start = compact ? 0 : solver->first_reducible; 
   if (start != INVALID_REF)
     {
 #ifndef QUIET
@@ -226,7 +226,7 @@ kissat_reduce (kissat * solver)
       kissat_phase (solver, "reduce", GET (reductions),
 		    "sweeping %zu words %s %.0f%%",
 		    words_to_sweep, FORMAT_BYTES (bytes_to_sweep),
-		    kissat_percent (words_to_sweep, arena_size));
+		    kissat_percent (words_to_sweep, arena_size)); 
 #endif
       if (kissat_flush_and_mark_reason_clauses (solver, start))
 	{
@@ -236,20 +236,20 @@ kissat_reduce (kissat * solver)
 	    {
 	      sort_reducibles (solver, &reds);
 	      mark_less_useful_clauses_as_garbage (solver, &reds);
-	      RELEASE_STACK (reds);
-	      kissat_sparse_collect (solver, compact, start);
+	      RELEASE_STACK (reds); 
+	      kissat_sparse_collect (solver, compact, start); 
 	    }
-	  else if (compact)
-	    kissat_sparse_collect (solver, compact, start);
-	  else
-	    kissat_unmark_reason_clauses (solver, start);
+	  else if (compact) 
+	    kissat_sparse_collect (solver, compact, start); 
+	  else 
+	    kissat_unmark_reason_clauses (solver, start); 
 	}
       else
 	assert (solver->inconsistent);
     }
   else
     kissat_phase (solver, "reduce", GET (reductions), "nothing to reduce");
-  UPDATE_CONFLICT_LIMIT (reduce, reductions, NDIVLOGN, false);
+  UPDATE_CONFLICT_LIMIT (reduce, reductions, NDIVLOGN, false); 
   REPORT (0, '-');
   STOP (reduce);
   return solver->inconsistent ? 20 : 0;

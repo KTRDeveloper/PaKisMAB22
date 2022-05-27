@@ -14,7 +14,12 @@ activate_literal (kissat * solver, unsigned lit)
   assert (!f->eliminated);
   solver->active++;
   kissat_enqueue (solver, idx);
-  kissat_push_heap (solver, &solver->scores, idx);
+  // MAB
+  if(solver->mab) {
+	kissat_push_heap (solver,&solver->scores, idx);
+	kissat_push_heap (solver, &solver->scores_chb, idx);
+  }else kissat_push_heap (solver, solver->heuristic==0?&solver->scores:&solver->scores_chb, idx);
+
   assert (solver->unassigned < UINT_MAX);
   solver->unassigned++;
   kissat_mark_removed_literal (solver, lit);
@@ -37,8 +42,16 @@ deactivate_variable (kissat * solver, flags * f, unsigned idx)
   assert (solver->active > 0);
   solver->active--;
   kissat_dequeue (solver, idx);
-  if (kissat_heap_contains (&solver->scores, idx))
-    kissat_pop_heap (solver, &solver->scores, idx);
+  // MAB
+  if(solver->mab){
+	if (kissat_heap_contains (&solver->scores, idx))
+    		kissat_pop_heap (solver, &solver->scores, idx);
+	if (kissat_heap_contains (&solver->scores_chb, idx))
+	    	kissat_pop_heap (solver,&solver->scores_chb, idx);
+  }else{
+        if (kissat_heap_contains (solver->heuristic==0?&solver->scores:&solver->scores_chb, idx))
+    	        kissat_pop_heap (solver, solver->heuristic==0?&solver->scores:&solver->scores_chb, idx);
+  }
 }
 
 void
